@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Seis maneras de mirar lo mismo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cera:#F7EEDA; --cera-2:#EFE1C2; --carbon:#141414; --carbon-2:#4A463D;
+  --miel:#F2B01E; --linea:#D8C9A8;
+  --bg:var(--cera); --tinta:var(--carbon); --tinta-2:var(--carbon-2);
+  --sup:var(--cera-2); --borde:var(--linea); --acento:#8A6206;
+  --esc:1;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#141414; --tinta:#F7EEDA; --tinta-2:#B3A891; --sup:#1F1C17; --borde:#3A352C; --acento:var(--miel);
+  }
+}
+:root[data-theme="dark"]{--bg:#141414;--tinta:#F7EEDA;--tinta-2:#B3A891;--sup:#1F1C17;--borde:#3A352C;--acento:var(--miel)}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:calc(58px + env(safe-area-inset-top,0px))}
+body{margin:0;background:var(--bg);color:var(--tinta);
+  font-family:Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:calc(17px * var(--esc));line-height:1.68;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--miel);outline-offset:3px}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+
+.wrap{max-width:38rem;margin:0 auto;padding:0 20px}
+.tapa{padding:48px 0 12px}
+.tapa h1{font-family:"Bebas Neue",Impact,sans-serif;font-weight:400;
+  font-size:clamp(3.1rem,15vw,5.4rem);line-height:.86;letter-spacing:.01em;margin:0 0 18px;max-width:9ch}
+.tapa .bajada{font-size:1.06rem;color:var(--tinta-2);margin:0 0 22px;max-width:36ch}
+.tapa .uso{font-size:.95rem;line-height:1.55;color:var(--tinta-2);
+  border-left:3px solid var(--miel);padding:2px 0 2px 14px;margin:0 0 22px;max-width:40ch}
+.tapa .uso strong{color:var(--tinta);font-weight:600}
+.objeto{background:var(--sup);padding:18px 18px 16px;border-radius:3px;margin-bottom:6px}
+.objeto h2{font-size:1.05rem;font-weight:600;margin:0 0 8px}
+.objeto p{font-size:.95rem;line-height:1.55;margin:0 0 10px;color:var(--tinta-2)}
+.objeto p:last-child{margin-bottom:0}
+.objeto strong{color:var(--tinta);font-weight:600}
+
+.cuat{padding:30px 0 4px;border-top:1px solid var(--borde);margin-top:34px}
+.cuat-cab{display:flex;align-items:baseline;gap:10px;margin-bottom:4px}
+.cuat-n{font-family:"Bebas Neue",Impact,sans-serif;font-size:2.1rem;line-height:1;color:var(--acento)}
+.cuat-t{font-size:1.02rem;font-weight:600;line-height:1.3}
+.cuat-sub{font-size:.9rem;color:var(--tinta-2);margin:0 0 18px}
+
+.panal{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;align-items:start}
+.panal > *:nth-child(2n){margin-top:26px}
+.hex{position:relative;width:100%;aspect-ratio:1 / 1.1547;
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  background:var(--sup);display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:8px 4px;gap:1px;transition:background .18s ease,transform .18s ease}
+.hex:active{transform:scale(.97)}
+.hex .vb{font-family:"Bebas Neue",Impact,sans-serif;line-height:.95;letter-spacing:.02em;
+  font-size:clamp(.95rem,4.6vw,1.5rem)}
+.hex .pr{font-size:clamp(.6rem,2.5vw,.72rem);color:var(--tinta-2);font-style:italic}
+.hex[data-leido="1"]{background:var(--miel);color:#141414}
+.hex[data-leido="1"] .pr{color:#3A2C05}
+.hex.extra{background:transparent}
+.hex.extra::before{content:"";position:absolute;inset:0;background:var(--borde);
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%,50% 2.4%,2% 26.2%,2% 73.8%,50% 97.6%,98% 73.8%,98% 26.2%)}
+.extra-fila{display:grid;grid-template-columns:1fr 2fr;gap:12px;align-items:center;margin-top:6px}
+.extra-nota{font-size:.9rem;color:var(--tinta-2);line-height:1.45;margin:0}
+.pie{margin:46px 0 40px;padding-top:18px;border-top:1px solid var(--borde);font-size:.86rem;color:var(--tinta-2);line-height:1.5}
+
+#lectura{display:none}
+body.leyendo #portada{display:none}
+body.leyendo #lectura{display:block}
+.barra{position:fixed;top:0;left:0;right:0;z-index:20;background:var(--bg);
+  border-bottom:1px solid var(--borde);padding-top:env(safe-area-inset-top,0px)}
+.barra-in{max-width:38rem;margin:0 auto;padding:0 12px;height:52px;display:flex;align-items:center;gap:8px}
+.volver{display:flex;align-items:center;gap:8px;padding:8px 8px 8px 4px;font-size:.95rem;font-weight:500}
+.volver svg{width:16px;height:16px;flex:none}
+.barra-vb{font-family:"Bebas Neue",Impact,sans-serif;font-size:1.3rem;letter-spacing:.02em;margin-left:auto;opacity:0;transition:opacity .2s}
+.barra.compacta .barra-vb{opacity:1}
+.tam{display:flex;gap:2px;margin-left:8px}
+.tam button{width:32px;height:32px;border:1px solid var(--borde);border-radius:2px;line-height:1;font-weight:600}
+.tam button:first-child{font-size:.8rem}
+.tam button:last-child{font-size:1.05rem}
+.progreso{position:absolute;left:0;bottom:-1px;height:2px;background:var(--miel);width:0}
+
+.lect{max-width:38rem;margin:0 auto;padding:calc(72px + env(safe-area-inset-top,0px)) 20px 0}
+.ficha{padding-bottom:22px;border-bottom:2px solid var(--tinta)}
+.ficha .ref{font-size:.85rem;color:var(--tinta-2);margin:0 0 6px}
+.ficha h2{font-family:"Bebas Neue",Impact,sans-serif;font-weight:400;
+  font-size:clamp(3.2rem,16vw,5.6rem);line-height:.84;margin:0 0 10px;letter-spacing:.01em}
+.ficha .def{font-size:1.12rem;line-height:1.45;font-weight:500;margin:0 0 12px;max-width:34ch}
+.ficha .pr{font-size:.92rem;color:var(--tinta-2);margin:0}
+.ficha .pr b{font-weight:600;color:var(--tinta)}
+
+.bloque{padding:30px 0;border-bottom:1px solid var(--borde)}
+.bloque:last-of-type{border-bottom:none}
+.bloque h3{font-size:1.24rem;line-height:1.25;font-weight:600;margin:0 0 12px;letter-spacing:-.005em}
+.bloque p{margin:0 0 14px;max-width:64ch}
+.bloque p:last-child{margin-bottom:0}
+.bloque strong{font-weight:600}
+.fuente{margin-top:18px;border-left:3px solid var(--miel);padding:2px 0 2px 13px;
+  font-size:.88rem;line-height:1.5;color:var(--tinta-2);max-width:56ch}
+.fuente b{display:block;font-weight:600;color:var(--tinta);font-size:.84rem;margin-bottom:2px}
+
+.fin{padding:26px 0 8px;border-top:2px solid var(--tinta);margin-top:8px}
+.fin .marca{display:flex;align-items:center;gap:9px;font-size:.92rem;color:var(--tinta-2);margin-bottom:20px}
+.fin .marca .punto{width:10px;height:10px;background:var(--miel);border-radius:50%;flex:none}
+.sig{display:flex;flex-direction:column;gap:9px;padding-bottom:52px}
+.sig button{text-align:left;border:1px solid var(--borde);padding:13px 15px;border-radius:3px;
+  display:flex;align-items:baseline;gap:9px}
+.sig .et{font-size:.8rem;color:var(--tinta-2);flex:none}
+.sig .nm{font-family:"Bebas Neue",Impact,sans-serif;font-size:1.35rem;letter-spacing:.02em}
+
+@media (min-width:620px){.panal{gap:14px}.tapa{padding:64px 0 16px}}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+.entra{animation:sube .32s ease both}
+@keyframes sube{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media print{
+  :root{--bg:#fff;--tinta:#000;--tinta-2:#444;--sup:#fff;--borde:#999;--miel:#000;--acento:#000}
+  .barra,.sig,.tam,.fin .marca{display:none !important}
+  .lect{padding-top:0;max-width:none}
+  .bloque{page-break-inside:avoid}
+  body{font-size:11pt}
+}
+</style>
+</head>
+<body>
+
+<main id="portada">
+  <div class="wrap">
+    <header class="tapa">
+      <h1>Seis maneras de mirar lo mismo</h1>
+      <p class="bajada">Seis técnicas para averiguar algo sobre la gente, aplicadas todas al mismo objeto.</p>
+      <p class="uso"><strong>Acá solo hay texto.</strong> Ninguna lectura pide nada: ni responder, ni marcar, ni entregar. Cada una se abre cuando la técnica ya pasó por clase.</p>
+      <div class="objeto">
+        <h2>El objeto del año</h2>
+        <p>Las seis técnicas caen sobre una sola pregunta: <strong>en qué se va el tiempo del curso</strong>. Dónde, con quién, mirando qué, a qué hora.</p>
+        <p>Parece una pregunta de biografía personal, y cada uno contesta la suya. Cuando las treinta respuestas se ponen juntas aparecen regularidades que ninguna de las treinta biografías explica. Ese salto tiene nombre desde 1959, cuando C. Wright Mills lo llamó la diferencia entre las dificultades privadas y las cuestiones públicas.</p>
+      </div>
+    </header>
+    <div id="cuats"></div>
+    <p class="pie">Cada bloque termina con la referencia exacta de dónde sale lo que dice: autor, obra y año de publicación. Las fuentes estadísticas van con su organismo y su fecha de relevamiento.</p>
+  </div>
+</main>
+
+<div id="lectura">
+  <div class="barra" id="barra">
+    <div class="barra-in">
+      <button class="volver" id="volver">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        Panal
+      </button>
+      <div class="tam" role="group" aria-label="Tamaño del texto">
+        <button id="menos" aria-label="Achicar el texto">A</button>
+        <button id="mas" aria-label="Agrandar el texto">A</button>
+      </div>
+      <span class="barra-vb" id="barraVb"></span>
+    </div>
+    <div class="progreso" id="progreso"></div>
+  </div>
+  <article class="lect" id="lect"></article>
+</div>
+
+<script>
+const DATA = [
+{
+  id:"observar", cuat:1, verbo:"Observar", producto:"registro",
+  definicion:"Mirar un lugar durante un rato fijo y escribir lo que pasa, sin intervenir.",
+  bloques:[
+    {
+      t:"Qué se hace cuando se observa",
+      h:`<p>Mirar lo hacés todo el día. Observar es otra cosa: mirar con un protocolo. Un lugar elegido, una ventana de tiempo, una hoja donde escribir.</p>
+      <p>La diferencia se ve comparando dos frases sobre el mismo recreo. Una dice «el patio es un quilombo». La otra dice que a los tres minutos del timbre el patio está lleno, que hay seis grupos de entre cuatro y nueve personas, que dos ocupan el centro y los otros cuatro los bordes, y que hay once personas solas contra la pared del fondo.</p>
+      <p>La segunda se puede discutir. Alguien puede volver el jueves siguiente y contar de nuevo. La primera no se puede discutir con nada.</p>`,
+      f:"H. Becker, <em>Trucos del oficio</em> (1998). R. Guber, <em>La etnografía. Método, campo y reflexividad</em> (2001)."
+    },
+    {
+      t:"Las cuatro decisiones previas",
+      h:`<p>Antes de entrar se decide qué lugar, cuánto tiempo, qué se registra y dónde se escribe. Las cuatro se escriben antes, porque decidirlas adentro significa decidirlas según lo que ya está pasando.</p>
+      <p>El registro se arma en dos columnas. A la izquierda, lo que pasó. A la derecha, lo que se te ocurrió mientras pasaba.</p>
+      <p>Esa separación es la técnica entera. Seis meses después vas a poder releer el registro y saber cuál de las dos columnas era el dato. Si están mezcladas, todo el registro se vuelve tu opinión de aquel jueves.</p>`,
+      f:"R. Guber, <em>El salvaje metropolitano</em> (1991), sobre el registro de campo y el diario."
+    },
+    {
+      t:"Un caso: tres años y medio en una esquina",
+      h:`<p>William Foote Whyte se mudó en 1937 a un barrio italiano de Boston al que llamó Cornerville y se quedó tres años y medio. Jugaba a los bolos con el grupo de la esquina, iba a las reuniones del club, tomaba notas de noche.</p>
+      <p>Lo que encontró es su hallazgo más citado. El grupo de la esquina tenía una estructura estable: posiciones, obligaciones, alguien que decidía. Y los puntajes de los bolos seguían esa estructura. El que jugaba mejor sacaba puntajes bajos cuando el líder del grupo estaba mirando. La habilidad estaba; el resultado se acomodaba a la posición.</p>
+      <p>Whyte publicó <em>Street Corner Society</em> en 1943 y en la segunda edición, de 1955, agregó un apéndice donde cuenta cómo entró, qué errores cometió y qué le costó salir. Ese apéndice se volvió más leído que varios capítulos del libro.</p>`,
+      f:"W. F. Whyte, <em>Street Corner Society</em> (1943; apéndice metodológico en la 2ª edición, 1955)."
+    },
+    {
+      t:"El efecto de estar siendo mirado",
+      h:`<p>Entre 1924 y 1932, en la planta Hawthorne de la Western Electric, en Cicero, Illinois, un equipo probó qué pasaba con la productividad al cambiar la iluminación. Subieron la luz y la productividad subió. Bajaron la luz y también subió.</p>
+      <p>La explicación que quedó fue que lo que había cambiado era otra cosa: las trabajadoras sabían que las estaban estudiando. A eso se le llamó efecto Hawthorne y se convirtió en una de las historias más contadas de las ciencias sociales.</p>
+      <p>Ahora, la historia tuvo mejor suerte que la evidencia. En 2011, Steven Levitt y John List consiguieron los datos originales del experimento de iluminación y los reanalizaron: el efecto aparece mucho más débil de lo que cuenta la leyenda.</p>
+      <p>Las dos cosas sirven acá. Que el observador altera lo que observa es cierto en alguna medida. Cuánto, es una pregunta empírica, y conviene desconfiar de las cifras que nadie fue a chequear.</p>`,
+      f:"F. Roethlisberger y W. Dickson, <em>Management and the Worker</em> (1939). S. Levitt y J. List, «Was There Really a Hawthorne Effect at the Hawthorne Plant?», <em>American Economic Journal: Applied Economics</em> (2011)."
+    },
+    {
+      t:"Confusión frecuente",
+      h:`<p>Observar no es opinar. La columna izquierda del registro describe lo que cualquiera que hubiera estado ahí podría confirmar. Todo lo demás va a la derecha.</p>
+      <p>Y observar tampoco significa esconderse. En una escuela, mirar sin avisarle a nadie es un problema de permiso antes que un problema de método.</p>`,
+      f:""
+    },
+    {
+      t:"El límite",
+      h:`<p>Un registro dice qué pasó ahí, a esa hora, ese día. No dice si eso pasa siempre. Para saber si hay un patrón hacen falta repeticiones, y para saber si eso pasa en otro lado hacen falta las otras técnicas.</p>
+      <p>Lo segundo: lo que se observa cambia por ser observado, en una medida difícil de estimar. La contramedida realista es quedarse el tiempo suficiente para que el lugar se olvide de vos.</p>`,
+      f:""
+    }
+  ]
+},
+{
+  id:"escuchar", cuat:1, verbo:"Escuchar", producto:"desgrabación",
+  definicion:"Preguntarle a alguien por su experiencia con un guion propio, grabar y desgrabar.",
+  bloques:[
+    {
+      t:"La entrevista no es una charla",
+      h:`<p>Una charla va para donde va. Una entrevista tiene un guion y algo que quiere averiguar, y aun así deja que el otro la lleve a lugares que no estaban previstos.</p>
+      <p>Hay tres formatos. La <strong>estructurada</strong> repite las mismas preguntas en el mismo orden a todos, y se parece a una encuesta hablada. La <strong>abierta</strong> arranca con un tema y sigue la conversación. La <strong>semiestructurada</strong> tiene ejes escritos y libertad para repreguntar, y es la que funciona en el aula: el guion evita quedarse en blanco y no impide seguir algo interesante.</p>`,
+      f:"R. Guber, <em>La etnografía. Método, campo y reflexividad</em> (2001), capítulo sobre la entrevista etnográfica."
+    },
+    {
+      t:"La repregunta, que es donde está el oficio",
+      h:`<p>El guion consigue que la entrevista arranque. Lo que la vuelve un dato es la repregunta.</p>
+      <p>Cuando alguien dice «y bueno, es lo que hay», ahí adentro hay algo cerrado. Tres repreguntas lo abren casi siempre:</p>
+      <p><strong>¿Cómo sería eso?</strong> Pide una descripción y saca al entrevistado de la fórmula.<br>
+      <strong>¿Te acordás de alguna vez que pasó?</strong> Pide un episodio concreto, con día y lugar.<br>
+      <strong>¿Y antes cómo era?</strong> Pide una fecha, y la fecha convierte un estado en un proceso.</p>
+      <p>La tercera es la más productiva y la que menos se usa. «Siempre fue así» deja de ser una respuesta apenas alguien tiene que decir desde cuándo.</p>`,
+      f:""
+    },
+    {
+      t:"Desgrabar",
+      h:`<p>Es la parte lenta y la que siempre se subestima. Una hora de audio da entre tres y cuatro horas de desgrabación para alguien sin práctica.</p>
+      <p>Las convenciones mínimas: líneas numeradas, iniciales para cada voz, los silencios largos marcados entre paréntesis, las risas y las interrupciones anotadas. Y una regla que cuesta: no corregir la gramática.</p>
+      <p>La corrección borra el dato. Cómo alguien dice algo —con qué palabras, con qué vueltas, dónde se frena— es parte de lo que dijo. El análisis de la conversación construyó todo un sistema de transcripción alrededor de esa idea, con notación para las pausas medidas en décimas de segundo.</p>`,
+      f:"Sobre convenciones de transcripción, el sistema de Gail Jefferson en análisis de la conversación (1984)."
+    },
+    {
+      t:"Un caso: preguntarle a la gente por su trabajo",
+      h:`<p>Studs Terkel se pasó tres años grabando a gente de Estados Unidos hablando de su trabajo y publicó <em>Working</em> en 1974. Camareras, recolectores de residuos, telefonistas, un ejecutivo, una prostituta, un empleado de estacionamiento. Las entrevistas salen editadas y casi enteras, en primera persona, sin que Terkel aparezca explicando.</p>
+      <p>El libro muestra una cosa que ninguna estadística del empleo muestra: qué le parece a cada uno lo que hace todos los días, y cómo lo cuenta.</p>
+      <p>La versión sociológica de esa apuesta es <em>La miseria del mundo</em>, dirigido por Pierre Bourdieu en 1993: entrevistas largas publicadas con una presentación que aclara quién entrevistó, dónde y qué relación tenía con el entrevistado.</p>`,
+      f:"S. Terkel, <em>Working</em> (1974). P. Bourdieu (dir.), <em>La misère du monde</em> (1993)."
+    },
+    {
+      t:"Confusión frecuente",
+      h:`<p>El entrevistado no tiene que decir la verdad para que la entrevista sirva.</p>
+      <p>Lo que alguien cuenta sobre su vida es un dato sobre lo que puede contar, en esa situación, frente a esa persona que pregunta. Si exagera, si se calla, si adorna, eso también es información: sobre qué se puede decir y qué no. Eso forma parte del objeto y no arruina el material.</p>
+      <p>Lo que sí arruina el material es la pregunta que trae adentro la respuesta esperada. «¿No te parece injusto que…?» no es una pregunta.</p>`,
+      f:""
+    },
+    {
+      t:"El límite",
+      h:`<p>Cinco entrevistas no son una muestra. Sirven para saber qué existe, qué formas toma una experiencia, con qué palabras se la nombra. No sirven para saber cuánto.</p>
+      <p>La pregunta «¿esto es un caso o es una tendencia?» queda abierta después de la entrevista, y se responde con las técnicas del segundo cuatrimestre.</p>`,
+      f:""
+    }
+  ]
+},
+{
+  id:"leer", cuat:1, verbo:"Leer", producto:"corpus",
+  definicion:"Tomar un conjunto de textos o imágenes, definir categorías y contar qué aparece.",
+  bloques:[
+    {
+      t:"Los documentos también son dato",
+      h:`<p>Un reglamento de convivencia, una tanda de publicidades, los titulares de una semana, los comentarios de una publicación. Todo eso está escrito por alguien, para alguien, en una fecha. Se puede analizar.</p>
+      <p>La técnica se llama <strong>análisis de contenido</strong> y tiene tres movimientos: definir un corpus, definir categorías, contar apariciones. El tercero es el fácil.</p>`,
+      f:"K. Krippendorff, <em>Content Analysis. An Introduction to Its Methodology</em> (1980; 3ª ed. 2013)."
+    },
+    {
+      t:"Armar el corpus",
+      h:`<p>La primera decisión es qué entra y qué queda afuera, y es la que define el resultado.</p>
+      <p>«Las publicidades de la tele» no es un corpus. «Los avisos emitidos entre las 20 y las 22, de lunes a viernes, en dos canales de aire, durante una semana» sí lo es: cualquiera puede repetirlo y ver si le da lo mismo.</p>
+      <p>Y la regla que ordena todo: el corpus se define <strong>antes</strong> de mirarlo. Definirlo después significa elegir, sin querer, los casos que confirman lo que ya se pensaba.</p>`,
+      f:""
+    },
+    {
+      t:"De la categoría al número",
+      h:`<p>Las categorías tienen que cumplir dos condiciones. Ser <strong>exhaustivas</strong>: todo caso entra en alguna. Y ser <strong>excluyentes</strong>: ningún caso entra en dos.</p>
+      <p>La prueba de que una categoría está bien definida es simple y la usan todos los equipos de investigación: dos personas codifican el mismo material por separado y después comparan. Donde coinciden, la categoría funciona. Donde discrepan, la categoría se está llenando con la intuición de cada uno y hay que reescribirla.</p>
+      <p>Ese porcentaje de coincidencia tiene nombre técnico —acuerdo intercodificador— y se publica junto con los resultados.</p>`,
+      f:"K. Krippendorff, <em>Content Analysis</em>, capítulos sobre fiabilidad."
+    },
+    {
+      t:"El corpus que ya está armado",
+      h:`<p>Para consumos culturales hay un relevamiento oficial y gratuito: la Encuesta Nacional de Consumos Culturales, tercera edición, hecha en 2022 por el Sistema de Información Cultural de la Argentina.</p>
+      <p>Cubre a personas de 13 años y más en aglomerados de más de 30.000 habitantes, con 3.380 casos efectivos. Tiene un informe específico de juventudes.</p>
+      <p>Un dato del relevamiento, útil para comparar con cualquier corpus propio: el consumo de contenidos audiovisuales en plataformas pasó del 41 % en 2017 al 65 % en 2022, con Netflix a la cabeza, en el 63 % de los casos.</p>`,
+      f:"Encuesta Nacional de Consumos Culturales 2022, SINCA, Ministerio de Cultura (sinca.gob.ar). Base de datos de descarga libre."
+    },
+    {
+      t:"Confusión frecuente",
+      h:`<p>Contar apariciones no es medir influencia. Que una palabra aparezca cien veces dice qué se dice. No dice qué entiende el que lee, ni qué hace después.</p>
+      <p>El efecto de un mensaje sobre quien lo recibe es otra pregunta, y se investiga con otras técnicas: encuestas, experimentos, entrevistas. Mezclar las dos cosas es el error más común en los trabajos escolares sobre medios.</p>`,
+      f:""
+    },
+    {
+      t:"El límite",
+      h:`<p>El análisis de contenido lee lo que está. Lo que falta —el tema que nunca aparece, la voz que nunca habla— es más difícil de ver y suele ser más interesante.</p>
+      <p>La manera de verlo es comparar. Dos épocas, dos medios, dos países. La ausencia se vuelve visible cuando hay un corpus al lado donde eso sí aparece.</p>`,
+      f:""
+    }
+  ]
+},
+{
+  id:"preguntar", cuat:2, verbo:"Preguntar", producto:"muestra",
+  definicion:"Hacerle las mismas preguntas a mucha gente, con una muestra pensada y una redacción cuidada.",
+  bloques:[
+    {
+      t:"La encuesta fabrica el dato que mide",
+      h:`<p>Parece que una encuesta recoge opiniones que ya estaban ahí, guardadas, esperando. Funciona de otra manera: la opinión se produce en el momento en que alguien la pregunta, con esas palabras y en ese orden.</p>
+      <p>De ahí sale la regla de oficio: la redacción de cada pregunta es parte del resultado. No es un envoltorio del dato. Es el dato.</p>`,
+      f:"H. Schuman y S. Presser, <em>Questions and Answers in Attitude Surveys</em> (1981)."
+    },
+    {
+      t:"Una palabra, veinte puntos",
+      h:`<p>El experimento clásico es de 1940 y lo hizo Donald Rugg. Dividió la muestra en dos mitades y le preguntó a cada una por lo mismo, cambiando un verbo.</p>
+      <p>A la primera mitad: si Estados Unidos debía <strong>prohibir</strong> los discursos públicos contra la democracia. A la segunda: si debía <strong>no permitir</strong> esos discursos.</p>
+      <p>Prohibir y no permitir significan lo mismo. Los porcentajes dieron una diferencia de alrededor de veinte puntos: bastante más gente aceptaba «no permitir» que «prohibir».</p>
+      <p>Ochenta años después el efecto se sigue comprobando. Por eso las encuestas serias publican el cuestionario completo junto con los resultados: sin la redacción exacta, el número no se puede interpretar.</p>`,
+      f:"D. Rugg, «Experiments in Wording Questions», <em>Public Opinion Quarterly</em> (1941). Retomado por Schuman y Presser (1981)."
+    },
+    {
+      t:"El error más caro de la historia de las encuestas",
+      h:`<p>En 1936 la revista <em>Literary Digest</em> mandó diez millones de boletas para predecir la elección presidencial de Estados Unidos y recibió más de dos millones de respuestas. Con esa montaña de datos anunció que Alf Landon le ganaba a Franklin Roosevelt.</p>
+      <p>Roosevelt ganó en cuarenta y seis de los cuarenta y ocho estados. George Gallup, con unos pocos miles de casos elegidos con criterio, había acertado.</p>
+      <p>Qué pasó: las listas del <em>Digest</em> salían de guías telefónicas y registros de automóviles. En plena Depresión, tener teléfono y auto seleccionaba a una parte de la población, y esa parte votaba distinto. Hubo además un sesgo de respuesta: contestaron sobre todo los que querían el cambio.</p>
+      <p>La lección que dejó, y que sigue valiendo: el tamaño no arregla el sesgo. Dos millones de casos torcidos dan un resultado torcido con más decimales.</p>`,
+      f:"P. Squire, «Why the 1936 Literary Digest Poll Failed», <em>Public Opinion Quarterly</em> (1988)."
+    },
+    {
+      t:"Anónimo y agregado",
+      h:`<p>Una encuesta hecha en el aula se responde sin nombre y se procesa sumando: los resultados describen al curso y nunca a una persona del curso.</p>
+      <p>Eso además tiene encuadre legal. La Ley 25.326 de Protección de Datos Personales establece en su artículo 28 que sus disposiciones no se aplican a las encuestas de opinión, mediciones, estadísticas e investigaciones científicas en la medida en que los datos recogidos no puedan atribuirse a una persona determinada o determinable. Y agrega que, cuando el anonimato no pueda garantizarse, hay que usar una técnica de disociación.</p>
+      <p>En la práctica: hojas iguales, sin nombre, sin cruces que permitan reconstruir quién es quién. Un cruce de tres variables poco frecuentes alcanza para identificar a alguien en un curso de treinta.</p>`,
+      f:"Ley 25.326, artículo 28, y su decreto reglamentario 1558/01."
+    },
+    {
+      t:"Confusión frecuente",
+      h:`<p>Un porcentaje sobre veinticinco respuestas describe a esas veinticinco personas. Con el curso entero contestando, el dato describe al curso, y ya es bastante: es el único lugar del mundo donde ese dato existe.</p>
+      <p>El error es el salto de escala. «El 68 % de los jóvenes» requiere una muestra de jóvenes. «El 68 % del curso» requiere el curso, que es lo que hay.</p>`,
+      f:""
+    },
+    {
+      t:"El límite",
+      h:`<p>La encuesta mide lo que la gente <em>dice</em> que hace. El tiempo declarado y el tiempo registrado difieren, y la diferencia suele ir en una dirección previsible: se subestima lo aburrido y lo mal visto, se sobreestima lo que queda bien.</p>
+      <p>Por eso las encuestas de uso del tiempo no preguntan por un promedio. Preguntan por franjas horarias de un día concreto, casi siempre el día anterior, actividad por actividad. Recordar el martes cuesta menos que estimar una media.</p>`,
+      f:""
+    }
+  ]
+},
+{
+  id:"contar", cuat:2, verbo:"Contar", producto:"tabla",
+  definicion:"Usar los datos que el Estado ya produjo, leer tasas y comparar grupos.",
+  bloques:[
+    {
+      t:"Antes de producir un dato, fijarse si ya existe",
+      h:`<p>Argentina tiene estadística pública gratuita, de buena calidad y de acceso abierto. Buena parte de las preguntas que se le hacen a un curso ya están contestadas para todo el país, con muestras grandes y metodología publicada.</p>
+      <p>Eso no reemplaza al dato propio: lo vuelve interpretable. Un número del curso solo dice algo cuando hay otro número al lado.</p>`,
+      f:""
+    },
+    {
+      t:"El Censo, procesado en línea",
+      h:`<p>El Censo Nacional de Población, Hogares y Viviendas 2022 se puede procesar sin descargar nada, desde el navegador, con REDATAM: se arman tablas propias por provincia, por partido y hasta por radio censal.</p>
+      <p>En el mismo portal están los censos de 2010 y 2001, y series de la Encuesta Permanente de Hogares. Comparar dos censos es la manera más barata de ver un cambio: la misma pregunta, la misma población, dos fechas.</p>`,
+      f:"INDEC, Portal REDATAM (redatam.indec.gob.ar)."
+    },
+    {
+      t:"La encuesta de uso del tiempo",
+      h:`<p>La Encuesta Nacional de Uso del Tiempo 2021 del INDEC relevó 28.520 viviendas y cubre a la población de 14 años y más. Los resultados definitivos se publicaron en octubre de 2022.</p>
+      <p>Su dato central: las mujeres destinan <strong>5 horas y 59 minutos</strong> diarios al trabajo doméstico y de cuidados no remunerado; los varones, <strong>2 horas y 45 minutos</strong>. Y la brecha no está solo en la duración: participa de esas tareas el 91,7 % de las mujeres y el 75,1 % de los varones.</p>
+      <p>Es el espejo más directo de cualquier relevamiento propio sobre el tiempo: la misma pregunta, hecha con método a todo el país.</p>`,
+      f:"INDEC, Encuesta Nacional de Uso del Tiempo 2021, resultados definitivos (octubre de 2022). Base de datos descargable con manual de uso."
+    },
+    {
+      t:"Tasas, porcentajes y la base que no se muestra",
+      h:`<p>Una <strong>tasa</strong> es una cantidad por cada tanto: cada cien, cada mil, cada cien mil. Sirve para comparar grupos de tamaño distinto, que es casi siempre el problema.</p>
+      <p>El porcentaje tiene una trampa conocida: aparece sin su base. «Aumentó un 50 %» puede ser de dos casos a tres. Cualquier porcentaje sin el número absoluto al lado está incompleto, y en general lo está a propósito.</p>
+      <p>Lo mismo con los gráficos: un eje vertical que no arranca en cero convierte una diferencia mínima en una montaña. Mirar los ejes antes que las barras es un reflejo que se entrena.</p>`,
+      f:""
+    },
+    {
+      t:"Confusión frecuente",
+      h:`<p><strong>Falacia ecológica.</strong> Un dato de grupo no describe a ninguna persona del grupo. Si un barrio tiene una tasa alta de algo, eso no dice nada sobre un vecino en particular. El error tiene nombre desde que William Robinson lo formuló en 1950.</p>
+      <p><strong>Correlación y causa.</strong> Dos cosas que suben juntas pueden estar subiendo por una tercera que no se está midiendo. La pregunta que ordena es simple: ¿qué otra cosa podría explicar las dos?</p>`,
+      f:"W. S. Robinson, «Ecological Correlations and the Behavior of Individuals», <em>American Sociological Review</em> (1950)."
+    },
+    {
+      t:"El límite",
+      h:`<p>Un dato oficial es una construcción. Alguien definió las categorías, decidió a quién se le pregunta, eligió las palabras del cuestionario y fijó qué cuenta como qué. Todas esas decisiones están publicadas en las fichas metodológicas, y casi nadie las lee.</p>
+      <p>La pregunta de dónde salió este dato y quién lo produjo vale también, y sobre todo, para los números oficiales. No porque sean sospechosos: porque saber cómo se hicieron es lo que permite usarlos bien.</p>`,
+      f:""
+    }
+  ]
+},
+{
+  id:"mapear", cuat:2, verbo:"Mapear", producto:"croquis",
+  definicion:"Dibujar un espacio con sus usos y recorridos, y cruzarlo con los datos del territorio.",
+  bloques:[
+    {
+      t:"El espacio dice algo",
+      h:`<p>Dónde pasan las cosas informa sobre las cosas. Quién ocupa el centro de un patio y quién el borde, por dónde circula todo el mundo y qué rincón queda vacío, dónde se para la gente a esperar el colectivo y dónde no.</p>
+      <p>Un croquis con usos y recorridos convierte todo eso en algo que se puede comparar entre dos días, dos turnos o dos escuelas.</p>`,
+      f:""
+    },
+    {
+      t:"Cómo se arma un croquis de uso",
+      h:`<p>Plano a mano alzada, sin escala pero con proporciones parecidas. Encima se marcan cuatro capas:</p>
+      <p><strong>Lo fijo.</strong> Paredes, puertas, bancos, canillas, árboles, el mástil.<br>
+      <strong>Quién ocupa qué.</strong> Grupos, cantidad aproximada, dónde están parados.<br>
+      <strong>Por dónde se circula.</strong> Flechas de los recorridos repetidos.<br>
+      <strong>Dónde no va nadie.</strong> La capa que más sorprende y la que casi siempre se olvida.</p>
+      <p>Un croquis solo es una escena. Tres, hechos en momentos distintos, empiezan a mostrar un patrón.</p>`,
+      f:""
+    },
+    {
+      t:"Un caso: cuando una ciudad entera fue el laboratorio",
+      h:`<p>Entre 1915 y 1935, Robert Park, Ernest Burgess y sus estudiantes de la Universidad de Chicago dividieron la ciudad en zonas, la mapearon y estudiaron cada zona con observación, entrevistas y datos censales. De ahí salieron monografías sobre el taxi-dance hall, los hoteles de paso, las pandillas y el gueto.</p>
+      <p>Su esquema más famoso es el de las zonas concéntricas, que Burgess publicó en 1925: la ciudad como una serie de anillos alrededor del centro comercial. Fue muy discutido después, porque pretendía valer para cualquier ciudad y no vale.</p>
+      <p>Lo que quedó en pie es el procedimiento: mapear primero, elegir una zona, y recién ahí ir a mirar de cerca.</p>`,
+      f:"R. Park y E. Burgess, <em>The City</em> (1925)."
+    },
+    {
+      t:"El mapa que ya existe: el radio censal",
+      h:`<p>El territorio ya está mapeado, y con datos encima. La unidad más chica del censo es el <strong>radio censal</strong>, que según la definición del INDEC agrupa alrededor de trescientas viviendas, y REDATAM permite bajar hasta ese nivel.</p>
+      <p>Cruzar un croquis propio con los datos del radio donde está la escuela es el ejercicio que junta las dos mitades del año: lo que se vio con los ojos y lo que midió el Estado, sobre las mismas cuadras.</p>`,
+      f:"INDEC, Portal REDATAM, Censo 2022 (redatam.indec.gob.ar)."
+    },
+    {
+      t:"Confusión frecuente",
+      h:`<p>Un mapa es una selección. Lo que se decide marcar y lo que se deja afuera arma el argumento del mapa, aunque nadie escriba una sola frase.</p>
+      <p>Se ve fácil con los mapas de delito: dos mapas de la misma ciudad, uno con los delitos denunciados y otro con los condenados, dibujan dos ciudades distintas. Ninguno de los dos miente.</p>`,
+      f:""
+    },
+    {
+      t:"El límite",
+      h:`<p>El croquis muestra el uso en el momento en que se lo relevó. Sin repetición en el tiempo hay una escena y no un patrón.</p>
+      <p>Y el espacio no explica por sí solo. Que un rincón esté siempre vacío es un dato; por qué está vacío lo contesta alguien que lo usa, o lo evita, cuando se lo pregunten.</p>`,
+      f:""
+    }
+  ]
+},
+{
+  id:"permiso", cuat:3, verbo:"Permiso", producto:"protocolo",
+  definicion:"Lo que se pide, lo que se guarda y lo que no se pregunta, antes de aplicar cualquiera de las seis.",
+  bloques:[
+    {
+      t:"Por qué hay un séptimo hexágono",
+      h:`<p>Las seis técnicas se aplican sobre personas: compañeros, vecinos, familiares, gente que pasa por una esquina. Antes de cada una hay una decisión que no es metodológica y que ninguna técnica resuelve.</p>
+      <p>Esta página junta esas decisiones en un solo lugar, porque son las mismas para las seis.</p>`,
+      f:""
+    },
+    {
+      t:"Las tres reglas",
+      h:`<p><strong>Se avisa y se pide.</strong> Nota a las familias para cualquier salida, consentimiento de quien va a ser entrevistado, acuerdo previo con la institución para cualquier relevamiento adentro de la escuela. El consentimiento se explica en términos que la persona entienda y se puede revocar en cualquier momento.</p>
+      <p><strong>Los datos se disocian.</strong> Sin nombres, sin cruces que permitan reconstruir quién es quién, y las hojas se destruyen cuando ya se tabuló. La Ley 25.326 deja fuera de su alcance a las encuestas y estadísticas cuando los datos no pueden atribuirse a una persona determinada o determinable, y exige una técnica de disociación cuando el anonimato no se puede garantizar.</p>
+      <p><strong>Hay preguntas que no se hacen.</strong> Salud, ingresos exactos, situación migratoria. La ley las llama datos sensibles y prohíbe que a alguien lo obliguen a darlos; en el aula la regla es más simple y más corta: no se preguntan.</p>`,
+      f:"Ley 25.326, artículos 5, 6, 7 y 28, y decreto reglamentario 1558/01. Ley 26.061 de protección integral de derechos de niñas, niños y adolescentes."
+    },
+    {
+      t:"Por qué el experimento de ruptura queda afuera",
+      h:`<p>En los años sesenta Harold Garfinkel les daba a sus estudiantes un encargo raro: romper una norma que nadie escribió nunca y ver qué pasaba. Volver a casa y comportarse como un huésped. Pedirle a alguien que aclare lo que acaba de decir, una y otra vez, hasta que la frase más común se vuelva imposible de explicar.</p>
+      <p>El resultado es espectacular y muestra algo que ninguna otra técnica muestra igual: el orden de todos los días se mantiene con un trabajo invisible que solo se nota cuando se rompe.</p>
+      <p>Tiene dos problemas serios. El consentimiento previo anula el experimento, porque avisar destruye la ruptura. Y las reacciones documentadas por el propio Garfinkel incluyen angustia, enojo y conflictos familiares de varios días.</p>
+      <p>Por eso acá el orden tácito se estudia por el otro camino: observando lo que ya pasa. La cola que se arma sola, el ascensor donde todos miran hacia adelante, el aula en los tres minutos antes de que llegue alguien.</p>`,
+      f:"H. Garfinkel, <em>Studies in Ethnomethodology</em> (1967), capítulo 2."
+    },
+    {
+      t:"El material existe en un solo lugar",
+      h:`<p>Todo lo que produce el curso con estas seis técnicas —el registro del patio, la desgrabación de la entrevista, la tabla del cuestionario, el corpus de avisos, el croquis— existe en un solo lugar y no está en internet.</p>
+      <p>Eso tiene una consecuencia práctica. Un modelo de lenguaje puede escribir un texto correcto sobre el uso del tiempo de los adolescentes argentinos, con datos reales y buena redacción. No puede haber estado en el patio el jueves a las 10:05, ni haber escuchado a la persona que aceptó que la entrevistaran.</p>
+      <p>Por eso el trabajo de campo no se delega. El resto —buscar antecedentes, ordenar una bibliografía, revisar la redacción— es otra discusión, y conviene tenerla aparte.</p>`,
+      f:""
+    }
+  ]
+}
+];
+
+
+var CUATS = [
+  {n:"1", t:"Mirar: lo que pasa y lo que se dice", s:"Primer cuatrimestre, dieciséis semanas"},
+  {n:"2", t:"Medir: cuántos, dónde y comparado con qué", s:"Segundo cuatrimestre, dieciséis semanas"}
+];
+
+var leidos = {}, esc = 1;
+try{
+  var g = localStorage.getItem("panal4.leidos"); if(g) leidos = JSON.parse(g);
+  var e = localStorage.getItem("panal4.esc"); if(e) esc = parseFloat(e) || 1;
+}catch(err){ leidos = {}; esc = 1; }
+document.documentElement.style.setProperty("--esc", esc);
+
+function guardar(){
+  try{
+    localStorage.setItem("panal4.leidos", JSON.stringify(leidos));
+    localStorage.setItem("panal4.esc", String(esc));
+  }catch(err){}
+}
+
+function hex(a, cls){
+  return '<button class="hex'+(cls?' '+cls:'')+'" data-id="'+a.id+'" data-leido="'+(leidos[a.id]?1:0)+'">'+
+    '<span class="vb">'+a.verbo+'</span><span class="pr">'+a.producto+'</span></button>';
+}
+
+function pintarPortada(){
+  var h = "";
+  CUATS.forEach(function(c, i){
+    var tecnicas = DATA.filter(function(a){ return a.cuat === i+1; });
+    h += '<section class="cuat">'+
+      '<div class="cuat-cab"><span class="cuat-n">'+c.n+'</span><span class="cuat-t">'+c.t+'</span></div>'+
+      '<p class="cuat-sub">'+c.s+'</p>'+
+      '<div class="panal">'+ tecnicas.map(function(a){ return hex(a); }).join("") +'</div>'+
+      '</section>';
+  });
+  var extra = DATA.filter(function(a){ return a.cuat === 3; });
+  if(extra.length){
+    h += '<section class="cuat">'+
+      '<div class="cuat-cab"><span class="cuat-n">+</span><span class="cuat-t">Lo que vale para las seis</span></div>'+
+      '<p class="cuat-sub">Se lee antes de la primera salida</p>'+
+      '<div class="extra-fila">'+
+        extra.map(function(a){ return hex(a,"extra"); }).join("")+
+        '<p class="extra-nota">Las reglas de permiso y de manejo del dato, en un solo lugar.</p>'+
+      '</div></section>';
+  }
+  document.getElementById("cuats").innerHTML = h;
+}
+
+function pintarLectura(id){
+  var a = null, idx = -1;
+  DATA.forEach(function(x,i){ if(x.id===id){ a=x; idx=i; } });
+  if(!a) return volverAlPanal();
+
+  var ref = a.cuat <= 2 ? "Cuatrimestre "+a.cuat : "Transversal a los dos cuatrimestres";
+  var h = '<header class="ficha">'+
+    '<p class="ref">'+ref+'</p>'+
+    '<h2>'+a.verbo+'</h2>'+
+    '<p class="def">'+a.definicion+'</p>'+
+    '<p class="pr">Deja un <b>'+a.producto+'</b>.</p>'+
+    '</header>';
+
+  a.bloques.forEach(function(b){
+    h += '<section class="bloque"><h3>'+b.t+'</h3>'+b.h;
+    if(b.f) h += '<div class="fuente"><b>De dónde sale</b>'+b.f+'</div>';
+    h += '</section>';
+  });
+
+  h += '<div class="fin" id="fin">'+
+    '<p class="marca"><span class="punto"></span>Llegaste al final de '+a.verbo.toLowerCase()+'.</p><div class="sig">';
+  var sig = DATA[idx+1];
+  if(sig) h += '<button data-ir="'+sig.id+'"><span class="et">Sigue</span><span class="nm">'+sig.verbo+'</span></button>';
+  h += '<button data-ir="__panal"><span class="et">Volver</span><span class="nm">El panal</span></button></div></div>';
+
+  var cont = document.getElementById("lect");
+  cont.innerHTML = h;
+  cont.classList.remove("entra"); void cont.offsetWidth; cont.classList.add("entra");
+  document.getElementById("barraVb").textContent = a.verbo;
+  document.body.classList.add("leyendo");
+  window.scrollTo(0,0);
+  observarFin(a.id);
+}
+
+var obs = null;
+function observarFin(id){
+  if(obs) obs.disconnect();
+  var fin = document.getElementById("fin");
+  if(!fin || !("IntersectionObserver" in window)) return;
+  obs = new IntersectionObserver(function(ents){
+    ents.forEach(function(en){ if(en.isIntersecting){ leidos[id] = 1; guardar(); } });
+  }, {threshold:0.4});
+  obs.observe(fin);
+}
+
+function volverAlPanal(){
+  document.body.classList.remove("leyendo");
+  if(obs) obs.disconnect();
+  if(location.hash) history.replaceState(null,"",location.pathname+location.search);
+  pintarPortada();
+  window.scrollTo(0,0);
+}
+
+document.addEventListener("click", function(ev){
+  var h = ev.target.closest("[data-id]");
+  if(h){ location.hash = h.getAttribute("data-id"); return; }
+  var ir = ev.target.closest("[data-ir]");
+  if(ir){
+    var d = ir.getAttribute("data-ir");
+    if(d === "__panal") volverAlPanal(); else location.hash = d;
+    return;
+  }
+  if(ev.target.closest("#volver")) volverAlPanal();
+});
+
+function cambiarEsc(d){
+  esc = Math.min(1.34, Math.max(0.88, Math.round((esc + d)*100)/100));
+  document.documentElement.style.setProperty("--esc", esc);
+  guardar();
+}
+document.getElementById("mas").addEventListener("click", function(){ cambiarEsc(0.08); });
+document.getElementById("menos").addEventListener("click", function(){ cambiarEsc(-0.08); });
+
+var barra = document.getElementById("barra"), prog = document.getElementById("progreso");
+window.addEventListener("scroll", function(){
+  if(!document.body.classList.contains("leyendo")) return;
+  barra.classList.toggle("compacta", window.scrollY > 140);
+  var alto = document.documentElement.scrollHeight - window.innerHeight;
+  prog.style.width = (alto > 0 ? Math.min(100, (window.scrollY/alto)*100) : 0) + "%";
+}, {passive:true});
+
+function porHash(){
+  var id = location.hash.replace("#","");
+  if(id && DATA.some(function(a){ return a.id === id; })) pintarLectura(id);
+  else volverAlPanal();
+}
+window.addEventListener("hashchange", porHash);
+pintarPortada();
+porHash();
+</script>
+</body>
+</html>
